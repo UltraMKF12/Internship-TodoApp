@@ -1,13 +1,14 @@
-<script setup lang="ts">
-import PlusSymbol from './icons/plus_icon.vue'
-defineEmits(['addTodo'])
-</script>
-
 <template>
   <div class="flex justify-between">
     <h1 class="text-7xl font-bold">To do List</h1>
-    <button @click="$emit('addTodo')">
-      <PlusSymbol />
-    </button>
+    <BaseButton>
+      <PlusCircleIcon @click="$emit('addTodo')" class="h-16 w-16 text-green-400 cursor-pointer" />
+    </BaseButton>
   </div>
 </template>
+
+<script setup lang="ts">
+import { PlusCircleIcon } from '@heroicons/vue/24/solid'
+import BaseButton from '@/components/BaseButton.vue'
+defineEmits(['addTodo'])
+</script>
