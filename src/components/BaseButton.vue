@@ -1,5 +1,11 @@
 <template>
-  <button></button>
+  <button
+    :label="label"
+    :disabled="disabled"
+    :class="[textColor, backgroundColor]"
+  >
+    {{ buttonText }}
+  </button>
 </template>
 
 <script setup lang="ts">

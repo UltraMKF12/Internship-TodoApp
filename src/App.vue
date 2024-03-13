@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col justify-center content-center max-w-screen-md m-auto my-6">
+  <div class="m-auto my-6 flex max-w-screen-md flex-col content-center justify-center">
     <TodoHeader />
   </div>
 </template>
