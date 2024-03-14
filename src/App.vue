@@ -27,8 +27,8 @@ function addTodo() {
   const newItem: Todo = {
     id: todoList.value.length,
     priority: 'Low',
-    title: 'Test Title',
-    description: 'This is a test description to check the',
+    title: 'New Todo',
+    description: 'This is a placeholder text. Click on the card to start editing!',
     isChecked: false
   }
   todoList.value.unshift(newItem)
