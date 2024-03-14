@@ -24,12 +24,12 @@ const isTodoListEmpty = computed(() => !todoList.value.length)
 
 // Function that simulates a todo add for testing
 function addTodo() {
-  let newItem: Todo = {
+  const newItem: Todo = {
     id: todoList.value.length,
     priority: 'Low',
     title: 'Test Title',
     description: 'This is a test description to check the',
-    checked: false
+    isChecked: false
   }
   todoList.value.unshift(newItem)
 }

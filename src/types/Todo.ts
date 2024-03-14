@@ -3,7 +3,7 @@ export interface Todo {
   priority: Priority
   title: string
   description: string
-  checked: boolean
+  isChecked: boolean
 }
 
 export type Priority = 'High' | 'Medium' | 'Low'

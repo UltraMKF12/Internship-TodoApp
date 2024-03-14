@@ -19,8 +19,8 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import type { Todo } from '@/types/Todo'
-import TodoCheckbox from './TodoCheckbox.vue'
+import { Todo } from '@/types/Todo'
+import TodoCheckbox from '@/components/TodoCheckbox.vue'
 
 const item = defineModel<Todo>({ required: true })
 

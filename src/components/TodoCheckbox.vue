@@ -1,7 +1,7 @@
 <template>
   <label class="relative cursor-pointer">
     <input
-      v-model="item.checked"
+      v-model="item.isChecked"
       type="checkbox"
       name="checked"
       class="peer sr-only"
@@ -15,7 +15,7 @@
 
 <script setup lang="ts">
 import { CheckIcon } from '@heroicons/vue/24/solid'
-import type { Todo } from '@/types/Todo'
+import { Todo } from '@/types/Todo'
 
 const item = defineModel<Todo>({ required: true })
 </script>
