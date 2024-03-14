@@ -9,6 +9,7 @@
         v-model="todoList[index]"
       />
     </div>
+    <pre>{{ todoList }}</pre>
   </main>
 </template>
 
