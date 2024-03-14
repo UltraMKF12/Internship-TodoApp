@@ -104,6 +104,7 @@
         background-color="bg-gray-300"
         button-text="Delete"
         :class="priorityDropdownButtonFilter"
+        @click="openDeleteWindow"
       />
     </div>
 
@@ -114,6 +115,17 @@
     >
       <TodoCheckbox v-model="item" />
     </div>
+
+    <!-- Delete Confirmation Modal -->
+    <Teleport
+      v-if="isDeleteWindow"
+      to="body"
+    >
+      <TodoDeleteModal
+        @close="closeDeleteWindow"
+        @delete="deleteItem"
+      />
+    </Teleport>
   </div>
 </template>
 
@@ -125,10 +137,15 @@ import BaseButton from '@/components/BaseButton.vue'
 import TodoCalendar from '@/components/TodoCalendar.vue'
 import TodoPriorityDropdown from '@/components/TodoPriorityDropdown.vue'
 import TodoMobilePriorityEditRadio from '@/components/TodoMobilePriorityEditRadio.vue'
+import TodoDeleteModal from '@/components/TodoDeleteModal.vue'
 
 const item = defineModel<Todo>({ required: true })
+const emit = defineEmits<{
+  deleteItem: [id: number]
+}>()
 const isEditMode = ref(false)
 const isPriorityChange = ref(false)
+const isDeleteWindow = ref(false)
 
 const backgroundColorMap = {
   High: 'bg-red-500',
@@ -205,5 +222,18 @@ function openPriorityChange() {
 
 function closePriorityChange() {
   isPriorityChange.value = false
+}
+
+function openDeleteWindow() {
+  isDeleteWindow.value = true
+}
+
+function closeDeleteWindow() {
+  isDeleteWindow.value = false
+}
+
+function deleteItem() {
+  closeDeleteWindow()
+  emit('deleteItem', item.value.id)
 }
 </script>

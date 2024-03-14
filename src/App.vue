@@ -7,6 +7,7 @@
         v-for="(item, index) in todoList"
         :key="item.id"
         v-model="todoList[index]"
+        @delete-item="deleteItem"
       />
     </div>
   </main>
@@ -22,10 +23,11 @@ import { Todo } from '@/types/Todo'
 const todoList = ref<Todo[]>([])
 const isTodoListEmpty = computed(() => !todoList.value.length)
 
+const counter = ref(0)
 // Function that simulates a todo add for testing
 function addTodo() {
   const newItem: Todo = {
-    id: todoList.value.length,
+    id: counter.value++,
     priority: 'Low',
     title: 'New Todo',
     description: 'This is a placeholder text. Click on the card to start editing!',
@@ -34,11 +36,16 @@ function addTodo() {
   }
   todoList.value.unshift(newItem)
 }
+
 function getDate() {
   const date = new Date()
   const day = String(date.getDay()).padStart(2, '0')
   const month = String(date.getMonth()).padStart(2, '0')
   const year = String(date.getFullYear() % 100).padStart(2, '0')
   return `${day}.${month}.${year}`
+}
+
+function deleteItem(id: number) {
+  todoList.value = todoList.value.filter((item) => item.id != id)
 }
 </script>
