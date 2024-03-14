@@ -2,7 +2,7 @@
   <button
     :disabled="disabled"
     :class="[textColor, backgroundColor]"
-    class="rounded-xl px-8 py-3 hover:opacity-85 active:opacity-60"
+    class="rounded-xl px-6 py-2 hover:opacity-85 active:opacity-60 sm:px-8 sm:py-3"
     @click="emit('click')"
   >
     {{ buttonText }}
