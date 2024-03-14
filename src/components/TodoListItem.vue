@@ -1,7 +1,7 @@
 <template>
   <div class="relative rounded-xl border-2 border-black">
     <div
-      class="flex flex-col justify-between gap-10 p-4"
+      class="flex flex-col justify-between p-4"
       @click="enterEditMode"
     >
       <div class="flex items-start justify-between">
@@ -12,6 +12,10 @@
           >{{ item.priority }}</span
         >
       </div>
+      <TodoCalendar
+        :date="item.date"
+        class="mb-4 mt-2"
+      />
       <div class="flex max-w-[90%] items-end justify-between gap-6">
         <span
           class="break-words text-2xl font-bold"
@@ -52,6 +56,7 @@ import { computed, ref } from 'vue'
 import { Todo } from '@/types/Todo'
 import TodoCheckbox from '@/components/TodoCheckbox.vue'
 import BaseButton from '@/components/BaseButton.vue'
+import TodoCalendar from '@/components/TodoCalendar.vue'
 
 const item = defineModel<Todo>({ required: true })
 const isEditMode = ref(false)

@@ -29,8 +29,16 @@ function addTodo() {
     priority: 'Low',
     title: 'New Todo',
     description: 'This is a placeholder text. Click on the card to start editing!',
-    isChecked: false
+    isChecked: false,
+    date: getDate()
   }
   todoList.value.unshift(newItem)
+}
+function getDate() {
+  const date = new Date()
+  const day = String(date.getDay()).padStart(2, '0')
+  const month = String(date.getMonth()).padStart(2, '0')
+  const year = String(date.getFullYear() % 100).padStart(2, '0')
+  return `${day}.${month}.${year}`
 }
 </script>
