@@ -18,7 +18,7 @@
           <TodoCalendar
             :date="item.date"
             class="sm:mb-4 sm:mt-2"
-            :class="priorityDropdownButtonFilter"
+            :icon-class="mobileForceDisplayClass"
           />
         </div>
 
@@ -78,7 +78,7 @@
         <span
           ref="descriptionHTML"
           class="hidden break-words text-2xl font-bold sm:block"
-          :class="[textColor, priorityDropdownFilter]"
+          :class="[textColor, priorityDropdownFilter, mobileForceDisplayClass]"
           :contenteditable="isEditMode && !isPriorityChange"
           >{{ item.description }}</span
         >
@@ -193,6 +193,12 @@ const mobileEditModeMargin = computed(() => {
   } else {
     return 'pl-24'
   }
+})
+
+const mobileForceDisplayClass = computed(() => {
+  if (isEditMode.value) {
+    return '!block'
+  } else return ''
 })
 
 function enterEditMode() {
