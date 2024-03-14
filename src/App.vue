@@ -4,12 +4,9 @@
       <TodoHeader @add-todo="addTodo" />
       <TodoListEmpty v-if="isTodoListEmpty" />
       <TodoListItem
-        v-for="item in todoList"
+        v-for="(item, index) in todoList"
         :key="item.id"
-        :title="item.title"
-        :description="item.description"
-        :priority="item.priority"
-        :checked="item.checked"
+        v-model="todoList[index]"
       />
     </div>
   </main>
@@ -20,22 +17,20 @@ import { computed, ref } from 'vue'
 import TodoHeader from '@/components/TodoHeader.vue'
 import TodoListEmpty from '@/components/TodoListEmpty.vue'
 import TodoListItem from '@/components/TodoListItem.vue'
-import type Todo from '@/types/Todo'
+import { Todo } from '@/types/Todo'
 
 const todoList = ref<Todo[]>([])
 const isTodoListEmpty = computed(() => !todoList.value.length)
 
 // Function that simulates a todo add for testing
 function addTodo() {
-  let priorities = ['High', 'Medium', 'Low']
-  let randomPriority = priorities[Math.floor(Math.random() * 3)] as 'High' | 'Medium' | 'Low'
   let newItem: Todo = {
     id: todoList.value.length,
-    priority: randomPriority,
+    priority: 'Low',
     title: 'Test Title',
     description: 'This is a test description to check the',
-    checked: Boolean(Math.round(Math.random()))
+    checked: false
   }
-  todoList.value.push(newItem)
+  todoList.value.unshift(newItem)
 }
 </script>

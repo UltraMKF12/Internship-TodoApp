@@ -2,7 +2,7 @@
   <div class="flex items-center justify-between">
     <h1 class="text-4xl font-bold sm:text-7xl">To do List</h1>
     <PlusCircleIcon
-      class="w -16 h-16 cursor-pointer text-green-400"
+      class="size-16 cursor-pointer text-green-400"
       @click="addTodo"
     />
   </div>

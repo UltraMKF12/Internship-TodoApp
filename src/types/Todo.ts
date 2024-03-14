@@ -1,7 +1,9 @@
-export default interface Todo {
+export interface Todo {
   id: number
-  priority: 'High' | 'Medium' | 'Low'
+  priority: Priority
   title: string
   description: string
   checked: boolean
 }
+
+export type Priority = 'High' | 'Medium' | 'Low'

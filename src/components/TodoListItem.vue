@@ -1,55 +1,34 @@
 <template>
-  <section class="rounded-xl border-2 border-black">
+  <div class="rounded-xl border-2 border-black">
     <div class="flex flex-col justify-between gap-10 p-2">
       <div class="flex items-start justify-between">
-        <span class="break-all text-3xl font-bold">{{ title }}</span>
+        <span class="break-all text-3xl font-bold">{{ item.title }}</span>
         <span
-          class="rounded-full px-8 py-1 text-xl text-white"
+          class="select-none rounded-full px-8 py-1 text-xl text-white"
           :class="backgroundColor"
-          >{{ priority }}</span
+          >{{ item.priority }}</span
         >
       </div>
       <div class="flex items-end justify-between gap-6">
-        <span class="break-words text-2xl font-bold text-gray-500">{{ description }}</span>
-        <label class="relative cursor-pointer">
-          <input
-            value="checked"
-            type="checkbox"
-            name="checked"
-            class="peer sr-only"
-          />
-          <div
-            class="size-8 rounded-full border-4 border-black peer-checked:border-green-600"
-          ></div>
-          <CheckIcon
-            class="absolute -left-2 -top-4 hidden size-12 stroke-green-600 stroke-2 peer-checked:block"
-          />
-        </label>
+        <span class="break-words text-2xl font-bold text-gray-500">{{ item.description }}</span>
+        <TodoCheckbox v-model="item" />
       </div>
     </div>
-  </section>
+  </div>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import { CheckIcon } from '@heroicons/vue/24/solid'
+import type { Todo } from '@/types/Todo'
+import TodoCheckbox from './TodoCheckbox.vue'
 
-interface Props {
-  title: string
-  description: string
-  priority: 'High' | 'Medium' | 'Low'
-  checked: boolean
+const item = defineModel<Todo>({ required: true })
+
+const backgroundColorMap = {
+  High: 'bg-red-500',
+  Medium: 'bg-orange-400',
+  Low: 'bg-teal-400'
 }
 
-const props = defineProps<Props>()
-
-const backgroundColor = computed(() => {
-  if (props.priority === 'High') {
-    return 'bg-red-500'
-  } else if (props.priority === 'Medium') {
-    return 'bg-orange-400'
-  } else {
-    return 'bg-teal-400'
-  }
-})
+const backgroundColor = computed(() => backgroundColorMap[item.value.priority])
 </script>
