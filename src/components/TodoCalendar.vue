@@ -1,6 +1,6 @@
 <template>
   <div class="flex items-center gap-1">
-    <CalendarDaysIcon class="size-4 stroke-gray-800" />
+    <CalendarDaysIcon class="hidden size-4 stroke-gray-800 sm:block" />
     <p class="text-sm text-gray-800">{{ date }}</p>
   </div>
 </template>

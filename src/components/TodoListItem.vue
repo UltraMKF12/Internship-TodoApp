@@ -1,19 +1,60 @@
 <template>
   <div class="relative rounded-xl border-2 border-black">
     <div
-      class="flex flex-col justify-between p-4"
+      class="flex flex-col justify-between p-4 sm:p-4"
+      :class="mobileEditModeMargin"
       @click="enterEditMode"
     >
-      <div class="flex items-start justify-between">
-        <span
-          ref="titleHTML"
-          class="break-all text-3xl font-bold"
-          :contenteditable="isEditMode"
-          >{{ item.title }}</span
-        >
+      <!-- Title and Date Calendar -->
+      <div class="flex items-center justify-between sm:items-start">
+        <div class="flex flex-col">
+          <span
+            ref="titleHTML"
+            class="break-words text-3xl font-bold text-black"
+            :class="[priorityDropdownFilter]"
+            :contenteditable="isEditMode && !isPriorityChange"
+            >{{ item.title }}</span
+          >
+          <TodoCalendar
+            :date="item.date"
+            class="sm:mb-4 sm:mt-2"
+            :class="priorityDropdownButtonFilter"
+          />
+        </div>
+
+        <!-- Mobile Mode Priority -->
+        <div class="sm:hidden">
+          <div
+            v-if="!isEditMode"
+            class="size-3 shrink-0 rounded-full"
+            :class="backgroundColor"
+          ></div>
+          <div
+            v-else
+            class="flex gap-1"
+          >
+            <TodoMobilePriorityEditRadio
+              v-model="item"
+              color="bg-teal-400"
+              priority="Low"
+            />
+            <TodoMobilePriorityEditRadio
+              v-model="item"
+              color="bg-orange-400"
+              priority="Medium"
+            />
+            <TodoMobilePriorityEditRadio
+              v-model="item"
+              color="bg-red-500"
+              priority="High"
+            />
+          </div>
+        </div>
+
+        <!-- Desktop Mode Priority -->
         <div
           v-if="!isPriorityChange"
-          class="relative select-none rounded-full py-1 text-center text-xl"
+          class="relative hidden shrink-0 select-none rounded-full py-1 text-center text-xl sm:block"
           :class="[backgroundColor, priorityBoxSize]"
           @click="openPriorityChange"
         >
@@ -31,41 +72,45 @@
           @changed-priority="closePriorityChange"
         />
       </div>
-      <TodoCalendar
-        :date="item.date"
-        class="mb-4 mt-2"
-      />
+
+      <!-- Description -->
       <div class="flex max-w-[90%] items-end justify-between gap-6">
         <span
           ref="descriptionHTML"
-          class="break-words text-2xl font-bold"
-          :class="[textColor]"
-          :contenteditable="isEditMode"
+          class="hidden break-words text-2xl font-bold sm:block"
+          :class="[textColor, priorityDropdownFilter]"
+          :contenteditable="isEditMode && !isPriorityChange"
           >{{ item.description }}</span
         >
       </div>
     </div>
+
+    <!-- Save and Delete Buttons -->
     <div
       v-if="isEditMode"
       class="flex items-end gap-2 pb-4 pl-4 pt-4"
     >
       <BaseButton
-        :disabled="false"
+        :disabled="isPriorityChange"
         text-color="text-white"
         background-color="bg-green-500"
         button-text="Save"
+        :class="priorityDropdownButtonFilter"
         @click="leaveEditMode"
       />
       <BaseButton
-        :disabled="false"
+        :disabled="isPriorityChange"
         text-color="text-black"
         background-color="bg-gray-300"
         button-text="Delete"
+        :class="priorityDropdownButtonFilter"
       />
     </div>
+
+    <!-- Checkbox -->
     <div
       v-if="!isEditMode"
-      class="absolute right-2 -translate-y-10"
+      class="absolute left-7 top-[35%] sm:left-[91%] sm:top-full sm:-translate-y-12"
     >
       <TodoCheckbox v-model="item" />
     </div>
@@ -79,6 +124,7 @@ import TodoCheckbox from '@/components/TodoCheckbox.vue'
 import BaseButton from '@/components/BaseButton.vue'
 import TodoCalendar from '@/components/TodoCalendar.vue'
 import TodoPriorityDropdown from '@/components/TodoPriorityDropdown.vue'
+import TodoMobilePriorityEditRadio from '@/components/TodoMobilePriorityEditRadio.vue'
 
 const item = defineModel<Todo>({ required: true })
 const isEditMode = ref(false)
@@ -105,6 +151,30 @@ const priorityBoxSize = computed(() => {
     return 'w-36'
   } else {
     return 'px-8'
+  }
+})
+
+const priorityDropdownFilter = computed(() => {
+  if (isPriorityChange.value) {
+    return 'text-opacity-40 select-none'
+  } else {
+    return ''
+  }
+})
+
+const priorityDropdownButtonFilter = computed(() => {
+  if (isPriorityChange.value) {
+    return 'opacity-40 hover:opacity-40 active:opacity-40 select-none'
+  } else {
+    return ''
+  }
+})
+
+const mobileEditModeMargin = computed(() => {
+  if (isEditMode.value) {
+    return ''
+  } else {
+    return 'pl-24'
   }
 })
 
