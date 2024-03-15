@@ -41,19 +41,11 @@
             class="flex gap-1"
           >
             <TodoMobilePriorityEditRadio
+              v-for="todoPriority in priorities"
+              :key="todoPriority"
               v-model="item"
-              color="bg-teal-400"
-              priority="Low"
-            />
-            <TodoMobilePriorityEditRadio
-              v-model="item"
-              color="bg-orange-400"
-              priority="Medium"
-            />
-            <TodoMobilePriorityEditRadio
-              v-model="item"
-              color="bg-red-500"
-              priority="High"
+              :color="backgroundColorMap[todoPriority]"
+              :priority="todoPriority"
             />
           </div>
         </div>
@@ -93,7 +85,7 @@
           v-model="item.description"
           class="hidden h-20 w-[100%] break-words text-xl font-bold sm:block sm:h-32 sm:text-2xl"
           :class="[textColor, priorityDropdownFilter, mobileForceDisplayClass]"
-        />
+        ></textarea>
       </div>
     </div>
 
@@ -129,27 +121,23 @@
     </div>
 
     <!-- Delete Confirmation Modal -->
-    <Teleport
+    <TodoDeleteModalComponenet
       v-if="isDeleteWindow"
-      to="body"
-    >
-      <TodoDeleModalComponenet
-        @close="closeDeleteWindow"
-        @delete="deleteItem"
-      />
-    </Teleport>
+      v-model="isDeleteWindow"
+      @delete="deleteItem"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { Todo } from '@/types/Todo'
+import { Priority, Todo } from '@/types/Todo'
 import TodoCheckbox from '@/components/TodoCheckbox.vue'
 import BaseButton from '@/components/BaseButton.vue'
 import TodoCalendar from '@/components/TodoCalendar.vue'
 import TodoPriorityDropdown from '@/components/TodoPriorityDropdown.vue'
 import TodoMobilePriorityEditRadio from '@/components/TodoMobilePriorityEditRadio.vue'
-import TodoDeleModalComponenet from '@/components/TodoDeleModalComponenet.vue'
+import TodoDeleteModalComponenet from '@/components/TodoDeleteModalComponenet.vue'
 import { ChevronDownIcon } from '@heroicons/vue/24/solid'
 
 const item = defineModel<Todo>({ required: true })
@@ -159,6 +147,7 @@ const emit = defineEmits<{
 const isEditMode = ref(false)
 const isPriorityChange = ref(false)
 const isDeleteWindow = ref(false)
+const priorities = ref<Priority[]>(['Low', 'Medium', 'High'])
 
 const backgroundColorMap = {
   High: 'bg-red-500',
@@ -191,10 +180,10 @@ function leaveEditMode() {
   isPriorityChange.value = false
 
   // If the user deletes all text reset them to a default
-  if (item.value.title === '') {
+  if (!item.value.title) {
     item.value.title = 'Title'
   }
-  if (item.value.description === '') {
+  if (!item.value.description) {
     item.value.description = 'Description'
   }
 }
@@ -213,12 +202,7 @@ function openDeleteWindow() {
   isDeleteWindow.value = true
 }
 
-function closeDeleteWindow() {
-  isDeleteWindow.value = false
-}
-
 function deleteItem() {
-  closeDeleteWindow()
   emit('deleteItem', item.value.id)
 }
 </script>

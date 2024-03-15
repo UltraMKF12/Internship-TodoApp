@@ -96,16 +96,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
 import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
 import { TrashIcon, XMarkIcon } from '@heroicons/vue/24/outline'
 
-const open = ref(true)
-const emit = defineEmits(['delete', 'close'])
+const open = defineModel<boolean>({ required: true })
+const emit = defineEmits(['delete'])
 
 function closeButton() {
   open.value = false
-  emit('close')
 }
 
 function deleteButton() {
