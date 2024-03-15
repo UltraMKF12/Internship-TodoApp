@@ -9,15 +9,22 @@
       <div class="flex items-center justify-between sm:items-start">
         <div class="flex flex-col">
           <span
-            ref="titleHTML"
-            class="break-words text-3xl font-bold text-black"
+            v-if="!isEditMode"
+            class="line-clamp-1 text-2xl font-bold text-black sm:text-3xl"
             :class="[priorityDropdownFilter]"
-            :contenteditable="isEditMode && !isPriorityChange"
             >{{ item.title }}</span
           >
+          <input
+            v-else
+            v-model="item.title"
+            type="text"
+            class="w-[90%] truncate break-words text-2xl font-bold text-black sm:w-[100%] sm:text-3xl"
+            :class="[priorityDropdownFilter]"
+          />
           <TodoCalendar
             :date="item.date"
             class="sm:mb-4 sm:mt-2"
+            :class="[priorityDropdownButtonFilter]"
             :icon-class="mobileForceDisplayClass"
           />
         </div>
@@ -59,16 +66,15 @@
           @click="openPriorityChange"
         >
           <span>{{ item.priority }}</span>
-          <span
+          <ChevronDownIcon
             v-if="isEditMode"
-            class="text-xl text-white"
-          >
-            <span class="absolute right-1 translate-y-[-0.55rem] select-none text-2xl">⌄</span>
-          </span>
+            class="absolute right-2 top-1/4 size-5 fill-black"
+          />
         </div>
         <TodoPriorityDropdown
           v-else
           v-model="item"
+          class="hidden sm:block"
           @changed-priority="closePriorityChange"
         />
       </div>
@@ -76,12 +82,18 @@
       <!-- Description -->
       <div class="flex max-w-[90%] items-end justify-between gap-6">
         <span
-          ref="descriptionHTML"
-          class="hidden break-words text-2xl font-bold sm:block"
+          v-if="!isEditMode"
+          class="hidden text-xl font-bold sm:line-clamp-3 sm:text-2xl"
           :class="[textColor, priorityDropdownFilter, mobileForceDisplayClass]"
-          :contenteditable="isEditMode && !isPriorityChange"
-          >{{ item.description }}</span
         >
+          {{ item.description }}</span
+        >
+        <textarea
+          v-else
+          v-model="item.description"
+          class="hidden h-20 w-[100%] break-words text-xl font-bold sm:block sm:h-32 sm:text-2xl"
+          :class="[textColor, priorityDropdownFilter, mobileForceDisplayClass]"
+        />
       </div>
     </div>
 
@@ -121,7 +133,7 @@
       v-if="isDeleteWindow"
       to="body"
     >
-      <TodoDeleteModal
+      <TodoDeleModalComponenet
         @close="closeDeleteWindow"
         @delete="deleteItem"
       />
@@ -137,7 +149,8 @@ import BaseButton from '@/components/BaseButton.vue'
 import TodoCalendar from '@/components/TodoCalendar.vue'
 import TodoPriorityDropdown from '@/components/TodoPriorityDropdown.vue'
 import TodoMobilePriorityEditRadio from '@/components/TodoMobilePriorityEditRadio.vue'
-import TodoDeleteModal from '@/components/TodoDeleteModal.vue'
+import TodoDeleModalComponenet from '@/components/TodoDeleModalComponenet.vue'
+import { ChevronDownIcon } from '@heroicons/vue/24/solid'
 
 const item = defineModel<Todo>({ required: true })
 const emit = defineEmits<{
@@ -153,53 +166,21 @@ const backgroundColorMap = {
   Low: 'bg-teal-400'
 }
 
-const titleHTML = ref<HTMLSpanElement | null>()
-const descriptionHTML = ref<HTMLSpanElement | null>()
 const backgroundColor = computed(() => backgroundColorMap[item.value.priority])
-const textColor = computed(() => {
-  if (isEditMode.value) {
-    return 'text-black'
-  } else {
-    return 'text-gray-500'
-  }
-})
-const priorityBoxSize = computed(() => {
-  if (isEditMode.value) {
-    return 'w-36'
-  } else {
-    return 'px-8'
-  }
-})
 
-const priorityDropdownFilter = computed(() => {
-  if (isPriorityChange.value) {
-    return 'text-opacity-40 select-none'
-  } else {
-    return ''
-  }
-})
+const textColor = computed(() => (isEditMode.value ? 'text-black' : 'text-gray-500'))
+const priorityBoxSize = computed(() => (isEditMode.value ? 'w-36' : 'px-8'))
 
-const priorityDropdownButtonFilter = computed(() => {
-  if (isPriorityChange.value) {
-    return 'opacity-40 hover:opacity-40 active:opacity-40 select-none'
-  } else {
-    return ''
-  }
-})
+const priorityDropdownFilter = computed(() =>
+  isPriorityChange.value ? 'text-opacity-40 select-none' : ''
+)
 
-const mobileEditModeMargin = computed(() => {
-  if (isEditMode.value) {
-    return ''
-  } else {
-    return 'pl-24'
-  }
-})
+const priorityDropdownButtonFilter = computed(() =>
+  isPriorityChange.value ? 'opacity-40 hover:opacity-40 active:opacity-40 select-none' : ''
+)
 
-const mobileForceDisplayClass = computed(() => {
-  if (isEditMode.value) {
-    return '!block'
-  } else return ''
-})
+const mobileEditModeMargin = computed(() => (isEditMode.value ? '' : 'pl-24'))
+const mobileForceDisplayClass = computed(() => (isEditMode.value ? '!block' : ''))
 
 function enterEditMode() {
   isEditMode.value = true
@@ -208,8 +189,6 @@ function enterEditMode() {
 function leaveEditMode() {
   isEditMode.value = false
   isPriorityChange.value = false
-  item.value.title = titleHTML.value?.textContent
-  item.value.description = descriptionHTML.value?.textContent
 
   // If the user deletes all text reset them to a default
   if (item.value.title === '') {

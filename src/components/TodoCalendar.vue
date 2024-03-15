@@ -9,11 +9,11 @@
 </template>
 
 <script setup lang="ts">
+import { CalendarDaysIcon } from '@heroicons/vue/24/solid'
 interface Props {
   date: string
   iconClass: string
 }
 
 defineProps<Props>()
-import { CalendarDaysIcon } from '@heroicons/vue/24/solid'
 </script>

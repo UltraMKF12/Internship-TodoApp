@@ -19,6 +19,7 @@ import TodoHeader from '@/components/TodoHeader.vue'
 import TodoListEmpty from '@/components/TodoListEmpty.vue'
 import TodoListItem from '@/components/TodoListItem.vue'
 import { Todo } from '@/types/Todo'
+import moment from 'moment'
 
 const todoList = ref<Todo[]>([])
 const isTodoListEmpty = computed(() => !todoList.value.length)
@@ -38,11 +39,7 @@ function addTodo() {
 }
 
 function getDate() {
-  const date = new Date()
-  const day = String(date.getDay()).padStart(2, '0')
-  const month = String(date.getMonth()).padStart(2, '0')
-  const year = String(date.getFullYear() % 100).padStart(2, '0')
-  return `${day}.${month}.${year}`
+  return moment().format('DD.MM.YY')
 }
 
 function deleteItem(id: number) {
