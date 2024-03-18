@@ -2,6 +2,8 @@
   <button
     :disabled="disabled"
     :class="[textColor, backgroundColor]"
+    class="rounded-xl px-6 py-2 hover:opacity-85 active:opacity-60 sm:px-8 sm:py-3"
+    @click="click"
   >
     {{ buttonText }}
   </button>
@@ -10,11 +12,15 @@
 <script setup lang="ts">
 interface Props {
   disabled: boolean
-  textColor: string
+  textColor?: string
   backgroundColor: string
   buttonText: string
 }
 
 defineProps<Props>()
-defineEmits(['click'])
+const emit = defineEmits(['click'])
+
+function click() {
+  emit('click')
+}
 </script>

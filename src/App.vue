@@ -7,6 +7,7 @@
         v-for="(item, index) in todoList"
         :key="item.id"
         v-model="todoList[index]"
+        @delete-item="deleteItem"
       />
     </div>
   </main>
@@ -18,19 +19,30 @@ import TodoHeader from '@/components/TodoHeader.vue'
 import TodoListEmpty from '@/components/TodoListEmpty.vue'
 import TodoListItem from '@/components/TodoListItem.vue'
 import { Todo } from '@/types/Todo'
+import moment from 'moment'
 
 const todoList = ref<Todo[]>([])
 const isTodoListEmpty = computed(() => !todoList.value.length)
 
+const counter = ref(0)
 // Function that simulates a todo add for testing
 function addTodo() {
   const newItem: Todo = {
-    id: todoList.value.length,
+    id: counter.value++,
     priority: 'Low',
-    title: 'Test Title',
-    description: 'This is a test description to check the',
-    isChecked: false
+    title: 'New Todo',
+    description: 'This is a placeholder text. Click on the card to start editing!',
+    isChecked: false,
+    date: getDate()
   }
   todoList.value.unshift(newItem)
+}
+
+function getDate() {
+  return moment().format('DD.MM.YY')
+}
+
+function deleteItem(id: number) {
+  todoList.value = todoList.value.filter((item) => item.id != id)
 }
 </script>
