@@ -121,11 +121,15 @@
     </div>
 
     <!-- Delete Confirmation Modal -->
-    <TodoDeleteModalComponenet
-      v-if="isDeleteWindow"
+    <TodoModal
       v-model="isDeleteWindow"
       @delete="deleteItem"
-    />
+    >
+      <template #title> Delete Todo </template>
+      <template #description>
+        Are you sure you want to delete this todo? This action cannot be reversed!
+      </template>
+    </TodoModal>
   </div>
 </template>
 
@@ -137,13 +141,11 @@ import BaseButton from '@/components/BaseButton.vue'
 import TodoCalendar from '@/components/TodoCalendar.vue'
 import TodoPriorityDropdown from '@/components/TodoPriorityDropdown.vue'
 import TodoMobilePriorityEditRadio from '@/components/TodoMobilePriorityEditRadio.vue'
-import TodoDeleteModalComponenet from '@/components/TodoDeleteModalComponenet.vue'
+import TodoModal from '@/components/TodoModal.vue'
 import { ChevronDownIcon } from '@heroicons/vue/24/solid'
 
 const item = defineModel<Todo>({ required: true })
-const emit = defineEmits<{
-  deleteItem: [id: number]
-}>()
+const emit = defineEmits(['deleteItem'])
 const isEditMode = ref(false)
 const isPriorityChange = ref(false)
 const isDeleteWindow = ref(false)
